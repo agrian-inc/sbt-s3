@@ -31,8 +31,17 @@ publishMavenStyle := false
 
 crossSbtVersions := Seq("0.13.18", "1.2.8")
 
-bintrayRepository := "sbt-plugins"
 
 licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0"))
 
-bintrayOrganization := None
+publishTo := {
+  val artifactory = "https://artifactory.agrian.com/artifactory"
+  if (isSnapshot.value) {
+    Some(
+      "snapshots"
+        .at(s"$artifactory/sbt-dev-local;build.timestamp=" + new java.util.Date().getTime)
+    )
+  } else {
+    Some("releases".at(s"$artifactory/sbt-release-local"))
+  }
+}
